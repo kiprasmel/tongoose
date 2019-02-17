@@ -11,3 +11,15 @@
 - provide docs (duh)
 
 - release v1.0.0
+
+- back up the previous index.d.ts file if any exist in the target directory BEFORE wiping it :D
+
+- figure out how to convert mongoose's `Map` type to typescript (currently setting it to `any`)
+
+- take care of all the mongoose types @ https://mongoosejs.com/docs/schematypes.html
+
+- yargs manager file
+
+- no output to `.tongoose` directory option & implementation
+
+- fix `#copyFix` - `index.d.ts` file backing up into `.tongoose/type-defs/` folder
