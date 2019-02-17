@@ -1,0 +1,27 @@
+{
+	"name": "tongoose",
+	"version": "0.3.0",
+	"description": "Generate TypeScript Type Definitions from Mongoose Schemas!",
+	"main": "index.js",
+	"keywords": [],
+	"author": "Kipras Melnikovas <kipras@kipras.org> (https://kipras.org)",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/tongoose/tongoose.git"
+	},
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"start": "node index.js"
+	},
+	"bin": {
+		"tongoose": "./index.js"
+	},
+	"dependencies": {
+		"chalk": "^2.4.2",
+		"prettier": "1.16.4",
+		"rimraf": "^2.6.3",
+		"yargs": "^13.2.0"
+	},
+	"devDependencies": {}
+}
