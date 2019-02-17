@@ -1,0 +1,7 @@
+# tongoose
+.tongoose/
+src-fake/
+
+# node
+node_modules/
+package-lock.json
