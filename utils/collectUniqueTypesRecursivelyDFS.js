@@ -1,3 +1,7 @@
+function isRequired(objValue) {
+	return objValue.required && objValue.required === true ? true : false;
+}
+
 function collectUniqueTypesRecursivelyDFS(startingObject = {}) {
 	let collectedTypes = [];
 	const basicValueMatchingRegex = /(?!type:\n?\s*\n?)(\[)?(string|number|date|buffer|boolean|mixed|objectid|array|decimal128|map|null|true|false)(\])?/g;
@@ -7,74 +11,75 @@ function collectUniqueTypesRecursivelyDFS(startingObject = {}) {
 		return [];
 	}
 
-	// Object.entries(startingObject).forEach(([key, value]) => {
-	Object.values(startingObject).forEach((value) => {
-		// do stuff
+	Object.entries(startingObject).forEach(([key, value], index) => {
 		console.log("\n");
+		console.log(index, key, "<- key");
+		console.log(JSON.stringify(value));
 
-		// do nothing, but first make sure that there isn't anything deeper we will have basic types predefined
-		if (
-			basicValueMatchingRegex.test(value) ||
-			(value.type && basicValueMatchingRegex.test(value.type)) ||
-			typeof value === "undefined"
-		) {
-			// continue;
-			console.log(
-				"skipping. value =",
-				value,
-				"typeof value =",
-				typeof value,
-				"\nvalue.type =",
-				value.type
-			);
+		// first always check the .type, only the the propObjOrArr:
+
+		// object:
+		if (typeof value === "object") {
+			if (value.type) {
+				console.log(
+					"obj; value.type; key =",
+					key,
+					"after isReq:",
+					key + (isRequired(value) ? "" : "?")
+				);
+				collectedTypes.push(
+					JSON.stringify({
+						[key + (isRequired(value) ? "" : "?")]: value.type,
+					})
+				);
+			}
+			// if value.type isn't present, there's no way to add a `required` prop, hence don't even check for it (it's always optional)
+			else if (value) {
+				console.log("obj; value");
+				collectedTypes.push(
+					JSON.stringify({
+						[key + "?"]: value,
+					})
+				);
+			}
 		}
 
-		// foo: { bar: baz }
-		// else if (value) {
-		// 	console.log("recursively going with `value` =", value);
-		// 	collectedTypes = [
-		// 		...collectedTypes, // old
-		// 		JSON.stringify(value), // new
-		// 		...collectUniqueTypesRecursivelyDFS(value), // derived from new
-		// 	];
+		// array:
+		else if (typeof value === "array") {
+			if (value[0].type) {
+				console.log("array; value[0].type");
+				collectedTypes.push(
+					JSON.stringify({
+						[key + (isRequired(value[0]) ? "" : "?")]: value[0].type,
+					})
+				);
+			}
+			// if value[0].type isn't present, there's no way to add a `required` prop, hence don't even check for it (it's always optional)
+			else if (value[0]) {
+				console.log("array; value[0]");
+				collectedTypes.push(
+					JSON.stringify({
+						[key + "?"]: value[0],
+					})
+				);
+			}
+		}
+		// default:
+		else {
+			// baz
+			console.log("Error! (or not)... `type` neither array nor object, type =", typeof value);
+		}
+
+		// if (typeof value === "object" && value.type) {
+		// 	collectedTypes.push({ key, type: value.type });
+		// }
+		// if (typeof value === "object") {
+		// 	collectedTypes.push({ key, type: value });
+		// } else if (typeof value === "array") {
+		// } else {
 		// }
 
-		// foo: { type: someTypeOrDeeperNestedTypes }
-		// might still contain more deeper types inside
-		else if (value.type) {
-			console.log("recursively going with `value.type` =", value.type);
-			collectedTypes = [
-				...collectedTypes, // old
-				JSON.stringify(value.type), // new
-				...collectUniqueTypesRecursivelyDFS(value.type), // derived from new
-			];
-		}
-
-		// #TODO - not sure if this is needed / necessary
-		// foo: [{ type: someTypeOrDeeperNestedTypes }]
-		// might still contain more deeper types inside
-		else if (value[0] && value[0].type) {
-			console.log("recursively going with `value[0].type` =", value[0].type);
-			collectedTypes = [
-				...collectedTypes, // old
-				JSON.stringify(value.type[0]), // new
-				...collectUniqueTypesRecursivelyDFS(value[0].type), // derived from new
-			];
-		}
-
-		// continue searching
-		else {
-			console.log("unmatched. value =", value, "\nvalue.type =", value.type);
-			// if (typeof value === "object") {
-
-			// }
-
-			collectedTypes = [...collectedTypes, ...collectUniqueTypesRecursivelyDFS(value.type)];
-			// if (value || value.type) {
-			// 	console.log("going recursively.");
-			// 	collectedTypes = [...collectedTypes, ...collectUniqueTypesRecursivelyDFS(value)];
-			// }
-		}
+		//
 	}); /** Object.values().forEach */
 
 	return collectedTypes;
