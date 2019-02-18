@@ -1,14 +1,12 @@
 # Roadmap
 
-## [README](./README.md)
+[Back to Table of Contents](https://github.com/tongoose/tongoose#table-of-contents)
 
 ## The Map
 
-- release v1.0.0
+- back up the previous index.d.ts file if any exist in the target directory BEFORE wiping it and creating the new one :D
 
-- back up the previous index.d.ts file if any exist in the target directory BEFORE wiping it :D
-
-- figure out how to convert mongoose's (or not mongoose's) `Map`, `Mixed`, `Buffer` types to typescript (currently setting it to `any`)
+- figure out how to convert mongoose's (or not mongoose's) `Map`, `Mixed`, `Buffer` types to typescript (currently setting them to `any`)
 
 - take care of all the mongoose types @ https://mongoosejs.com/docs/schematypes.html
 
@@ -21,3 +19,5 @@
 - `--watch` option
 
 - auto tool for debugging the `.replace(regex)` parser lol
+
+- release v1.0.0

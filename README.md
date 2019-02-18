@@ -1,37 +1,40 @@
 # Tongoose
 
-# Automatically Generate TypeScript Type Definitions from Mongoose Schemas!
+📘 Automatically Generate TypeScript Type Definitions from Mongoose Schemas!
 
-# Installation & usage
+## Installation & usage
 
 - Install using npm & run
 
 ```bash
 npm i -g tongoose
-tongoose
+tongoose --help
 ```
 
-# Table of contents
+### That's it! If you know how to integrate typescript with mongoose schemas, you're done! The `--help` message will help you to quickly generate type definitions for your schemas. If you are struggling a bit, head over to the [From 0 to hero](https://github.com/tongoose/tongoose#from-0-to-hero) section - you'll get everything working in less than 5 minutes!
+
+---
+
+## Table of contents
 
 - [Learn all the basics in just 5 minutes or so while following along!](https://github.com/tongoose/tongoose#from-0-to-hero-youll-love-it)
-- [The Roadmap](https://github.com/tongoose/tongoose#roadmap)
+
+  - [set up a TypeScript + Babel project](https://github.com/tongoose/tongoose#set-up-a-simple-typescript--babel-project),
+  - [create mongoose schemas](https://github.com/tongoose/tongoose#create-a-mongoose-schema),
+  - [generate TS type definitions / interfaces using tongoose](https://github.com/tongoose/tongoose#generate-the-type-definition-file),
+  - [integrate them in your schemas](https://github.com/tongoose/tongoose#such-success--much-greatness--now-lets-try-to-apply--use-the-generated-type-interface)
+  - ([and test them!](https://github.com/tongoose/tongoose#awesome-now-lets-test-it))
+
+- [The Roadmap](./ROADMAP.md)
 - [How to contribute](https://github.com/tongoose/tongoose#contributing)
 - [Developers](https://github.com/tongoose/tongoose#developers)
 - [License](https://github.com/tongoose/tongoose#license)
 
 ## From 0 to hero (you'll love it)
 
-> You'll learn how to:
->
-> - [set up a TypeScript + Babel project](https://github.com/tongoose/tongoose#set-up-a-simple-typescript--babel-project),
-> - [create mongoose schemas](https://github.com/tongoose/tongoose#create-a-mongoose-schema),
-> - [generate TS type definitions / interfaces using tongoose](https://github.com/tongoose/tongoose#generate-the-type-definition-file),
-> - [integrate them in your schemas](https://github.com/tongoose/tongoose#such-success--much-greatness--now-lets-try-to-apply--use-the-generated-type-interface)
-> - ([and test them!](https://github.com/tongoose/tongoose#awesome-now-lets-test-it))
+> Note - the code is available at [/tongoose/TypeScript-Babel-Starter](https://github.com/tongoose/TypeScript-Babel-Starter)
 
-Note - the code is available @ [/tongoose/TypeScript-Babel-Starter](https://github.com/tongoose/TypeScript-Babel-Starter)
-
-## Set up a simple TypeScript + Babel project
+### Set up a simple TypeScript + Babel project
 
 ```bash
 git clone https://github.com/Microsoft/TypeScript-Babel-Starter.git
@@ -55,7 +58,7 @@ touch src/models/User.ts
 
 - open `src/models/User.ts` file in your favorite text editor
 
-## Create a mongoose schema
+### Create a mongoose schema
 
 ```ts
 // src/models/User.ts
@@ -97,7 +100,7 @@ Examples:
   tongoose --help
 ```
 
-## Generate the type definition file!
+### Generate the type definition file!
 
 - Run `tongoose` with the path to our `src/models/` directory
 
@@ -108,13 +111,13 @@ tongoose src/models/
 ```console
 ⚡️ Tongoose finished
 📂 Created `.tongoose` directory for manual debugging (you can safely delete it)
-📘 Main `index.d.ts` file placed in 👉  `src\\models\\index.d.ts` (click it!)
+📘 Main `index.d.ts` file placed in 👉 `src/models/index.d.ts`
 ```
 
-- open the generated `src/models/index.d.ts` file
+- open the generated `src/models/index.d.ts` file & take a look!
 
 ```ts
-import { ObjectId, Decimal128 } from "bson"; // `npm i --save-dev @types/mongodb`
+import { ObjectId } from "bson"; // `npm i --save-dev @types/mongodb`
 
 export interface IUser {
 	username?: string;
@@ -123,10 +126,10 @@ export interface IUser {
 }
 ```
 
-## Such Success! 😱 Much Greatness! 😍 Now let's try to apply & use the generated type interface
+### Such Success! 😱 Much Greatness! 😍 Now let's try to apply & use the generated type interface
 
 - head back to `src/models/User.ts`
-- make the following changes
+- make the following changes:
 
 ```diff
 // src/models/User.ts
@@ -146,13 +149,15 @@ const UserSchema = new mongoose.Schema({
 export = User;
 ```
 
-## Awesome! Now let's test it!
+### Awesome! Now let's test it!
 
-- Create a `src/test.ts` file & open it
+- Create a `src/test.ts` file
 
 ```bash
 touch src/test.ts
 ```
+
+- open it & add the following code:
 
 ```ts
 // src/test.ts
@@ -165,24 +170,30 @@ const user = new User({});
 
 Plot twist:
 
-![](https://i.imgur.com/UGk0Mme.png)
+![](https://i.imgur.com/QXqYwVT.png)
 
-- You can see `email` field right at the bottom together with `mongoose.Document`'s fields. Everything (**hopefully**) worked great!
+- You can see the `email` field right at the bottom together with `mongoose.Document`'s fields. Everything (**hopefully**) worked great!
 
 - Congratulations!
 
-# [Roadmap](./ROADMAP.md)
+---
 
-# Contributing
+[Back to Table of Contents ☝️](https://github.com/tongoose/tongoose#table-of-contents)
+
+---
+
+## [Our Roadmap](./ROADMAP.md)
+
+## Contributing
 
 Contributions are welcome! Please fork the repo, modify it & submit a pull request!
 
-The [Roadmap](./ROADMAP.md) is a good place to start
+The [Roadmap](./ROADMAP.md) is a good place to start 😃
 
-# Developers
+## Developers
 
 - **Kipras Melnikovas** - author - [**/sarpik**](https://github.com/sarpik) 😎
 
-# License
+## License
 
-### [MIT](./LICENSE)
+[MIT](./LICENSE)
