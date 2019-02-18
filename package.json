@@ -1,6 +1,6 @@
 {
 	"name": "tongoose",
-	"version": "0.3.0",
+	"version": "0.4.0",
 	"description": "Generate TypeScript Type Definitions from Mongoose Schemas!",
 	"main": "index.js",
 	"keywords": [],
