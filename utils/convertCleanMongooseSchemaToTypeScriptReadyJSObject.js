@@ -14,8 +14,14 @@
  * MIT Licensed
  */
 
+const chalk = require("chalk");
+
+// the `objValue.required === "true"` check is neccessary because we're
+// parsing strings, so yeah #IWillRefactorThisLATER
 function isRequired(objValue) {
-	return objValue.required && objValue.required === true ? true : false;
+	return objValue.required && (objValue.required === true || objValue.required === "true")
+		? true
+		: false;
 }
 
 function magicallyConvertMongooseSchemaToTypeScriptReadyJSObjectRecursively(
@@ -61,7 +67,7 @@ function magicallyConvertMongooseSchemaToTypeScriptReadyJSObjectRecursively(
 					startingObject = startingObject.substring(1, startingObject.length - 1); // [foo] => foo
 				}
 
-				// if is an interface
+				// if is an interface (refers to one of collected mongoose model files)
 				if (constModelFileNameArray.includes(startingObject)) {
 					startingObject = "I" + startingObject; // Foo => IFoo
 				}
@@ -104,10 +110,10 @@ function magicallyConvertMongooseSchemaToTypeScriptReadyJSObjectRecursively(
 		 */
 	}
 
-	Object.entries(startingObject).forEach(([key, value]) => {
-		// console\.log("\n");
-		// console\.log(index, key, "<- key");
-		// console\.log(JSON.stringify(value));
+	Object.entries(startingObject).forEach(([key, value], index) => {
+		// console.log("\n");
+		// console.log(index, key, "<- key");
+		// console.log(JSON.stringify(value));
 
 		/**
 		 * first always check the `value.type`, only then the `value`
