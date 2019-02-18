@@ -132,7 +132,15 @@ ${chalk.white(`Schema definition not found in`)} \
 			// .replace(/\/\/.*$/, "") // doesn't work
 			.replace(/(const|let|var).*?=.*?Schema.*\(/, "module.exports = ") // first line of schema def
 			.replace(/\<[^]*?\>/g, "") // typescript defs like <InterfaceName>
-			.replace(/},\r?\n?\s*{.*(\r?\n?.*?)*}\r?\n?\s*\)/, "}") // schema options
+			// .replace(/},\r?\n?\s*{.*(\r?\n?.*?)*}\r?\n?\s*\)/, "}") // schema options
+
+			// .replace(/(?<=}[\w\W]*?,){[\w\W]*?}[\w\W]*?\)/g, "}")
+			.replace(/(?<=}[^]*?),[\n\r\s]*?{[^]*?}[^]*?(?=\))/g, "") // { + schema options + }) => )
+			// .replace(/;/g, "")
+			// /(?={[\w\W]*?}[\w\W]*?,){[\w\W]*?}[\w\W]*?\)/; overkill
+
+			.replace(/}[\n\r\s]*?\);?/g, "}") // last line(s) from `})` => `}`
+
 			// // .replace(/enum:\s*([^\[\],\s]*?)\s*},/, 'enum: "[$1]" }, ') // enum: someExternalVariable
 			// // .replace(/enum:\s*([^\[}]*?),/g, 'enum: "[$1]", ')
 			// // .replace(/default:\s*\n*\{\s*\n*\},?/g, "") // empty default
