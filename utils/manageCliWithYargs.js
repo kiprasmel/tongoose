@@ -5,23 +5,15 @@
  *
  * http://yargs.js.org/docs/
  *
- * NOTE - do NOT `require("yargs")` from THIS directory!
- * Require it from the main file (index.js) and pass it as an argument
- * to the `manageCliWithYargs` function
- *
- * It's because the valid (successfully parsed) `yargs` instance will be
- * inside the file it's `require`d from!
- *
- * This is a MUST if you ever want to access the valid `yargs` variable
- * anywhere outside of this file (99% you do)
  *
  * Copyright (c) 2019 Kipras
  * MIT Licensed
  */
 
 const chalk = require("chalk");
+const yargs = require("yargs");
 
-function manageCliWithYargs(yargs) {
+function manageCliWithYargs() {
 	yargs
 		.scriptName("")
 		.usage(
