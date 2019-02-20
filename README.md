@@ -1,17 +1,44 @@
 # Tongoose
 
-📘 Automatically Generate TypeScript Type Definitions from Mongoose Schemas!
+📘 Automatically generate TypeScript Interfaces from Mongoose Schemas!
+
+<p align="center">
+<a href="https://www.npmjs.com/package/tongoose">
+	<img src="https://img.shields.io/npm/v/tongoose.svg?style=flat-square" alt="" />
+</a>
+
+<a href="https://www.npmjs.com/package/tongoose">
+	<img src="https://img.shields.io/npm/dt/tongoose.svg?style=flat-square" alt="" />
+</a>
+
+<a href="https://github.com/tongoose/tongoose/blob/master/LICENSE">
+	<img src="https://img.shields.io/npm/l/tongoose.svg?style=flat-square" alt="MIT"/>
+</a>
+</p>
 
 ## Installation & usage
 
-- Install using npm & run
+- Install using npm
 
 ```bash
 npm i -g tongoose
-tongoose --help
 ```
 
-### That's it! If you know how to integrate typescript with mongoose schemas, you're done! The `--help` message will help you to quickly generate type definitions for your schemas. If you are struggling a bit, head over to the [From 0 to hero](https://github.com/tongoose/tongoose#from-0-to-hero) section - you'll get everything working in less than 5 minutes!
+- Take a look at the `--help` message
+
+```bash
+tongoose
+```
+
+- Generate TypeScript Interfaces from your Schemas
+
+```bash
+tongoose ./path/to/mongoose/models
+```
+
+That's it! Now just integrate the generated Interfaces with your Mongoose Schemas!
+
+Don't know how? Head over to the [From 0 to hero](https://github.com/tongoose/tongoose#from-0-to-hero) section - you'll get everything working in less than 5 minutes!
 
 ---
 

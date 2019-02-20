@@ -3,12 +3,15 @@
 	"version": "0.4.5",
 	"description": "Generate TypeScript Type Definitions from Mongoose Schemas!",
 	"main": "index.js",
-	"keywords": [],
 	"author": "Kipras Melnikovas <kipras@kipras.org> (https://kipras.org)",
 	"license": "MIT",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/tongoose/tongoose.git"
+		"url": "https://github.com/tongoose/tongoose.git"
+	},
+	"bugs": {
+		"url": "https://github.com/tongoose/tongoose/issues",
+		"email": "sarpixo@gmail.com"
 	},
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
@@ -23,5 +26,16 @@
 		"rimraf": "^2.6.3",
 		"yargs": "^13.2.0"
 	},
-	"devDependencies": {}
+	"devDependencies": {},
+	"keywords": [
+		"mongoose",
+		"typescript",
+		"type",
+		"generator",
+		"generation",
+		"from",
+		"schema",
+		"schemas",
+		"tongoose"
+	]
 }
