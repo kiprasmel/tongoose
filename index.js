@@ -20,6 +20,14 @@ require("./utils/manageCliWithYargs")(); // `yargs` will still contain everythin
 const enableDebugging = yargs.argv["debug"] ? true : false;
 const disableFormatting = yargs.argv["noFormat"] ? true : false;
 
+const prettierOptions = { parser: "typescript" };
+
+const formattingInfo = disableFormatting
+	? `/** @tongoose: generated with --noFormat flag */`
+	: `/** @tongoose: formatted using \`prettier\` with options ${JSON.stringify(
+			prettierOptions
+	  )} */`;
+
 const repository = "https://github.com/tongoose/tongoose";
 const signature = `\
 /**
@@ -53,6 +61,7 @@ const generateRelativePathForTypeDefinitionOutputFile = require("./utils/generat
 
 const toFilename = require("./utils/toFilename");
 const toClickablePath = require("./utils/toClickablePath");
+const showWarning = require("./utils/showWarning");
 
 const relPathToModelsDirOrFile = require("./utils/returnModelDirOrFileOrShowHelpAndExit")();
 
@@ -111,11 +120,7 @@ ${requiredImportsForTypeScriptInterfaces}
 			rawSchemaContent = rawSchemaContent[0];
 		} else {
 			// schema definition not found
-			console.log(`\
-${chalk.yellowBright(`Warning`)}: \
-${chalk.white(`Schema definition not found in`)} \
-\`${chalk.yellowBright(`${modelFile}`)}\` \
-`);
+			showWarning("Schema definition not found in " + chalk.cyanBright(modelFile));
 			continue;
 		}
 
@@ -252,8 +257,11 @@ ${chalk.white(`Schema definition not found in`)} \
 
 		const fileNameNoExt = toFilename(modelFile, false); //modelFile.replace(/.*[\/\\](.*)\..*/g, "$1");
 
-		const typeScriptInterface = `export interface I${fileNameNoExt} \
-${typeScriptTypeDefinitions}\n`;
+		const interfaceName = "I" + fileNameNoExt;
+
+		const typeScriptInterface = `\
+export interface ${interfaceName}Model extends ${interfaceName}, mongoose.Document {} // #1
+export interface ${interfaceName} ${typeScriptTypeDefinitions}\n`;
 
 		const formattedTypeScriptInterface = disableFormatting
 			? typeScriptInterface
