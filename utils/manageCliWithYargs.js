@@ -21,8 +21,7 @@ function manageCliWithYargs() {
 ${chalk.bold.cyanBright("Usage:")} \
 ${chalk.bold.greenBright("tongoose")} \
 ${chalk.greenBright("./path/to/models/")} \
-[${chalk.greenBright("--opt")} [${chalk.greenBright("arg")}]] \
-`)
+[${chalk.greenBright("--opt")} [${chalk.greenBright("arg")}]]`)
 		)
 
 		.option("s", {
@@ -35,17 +34,6 @@ ${chalk.greenBright("./path/to/models/")} \
 relative path to mongoose models' directory\n`,
 		})
 
-		.option("n", {
-			alias: ["noFormat"],
-			requiresArg: false,
-			demandOption: false,
-			type: "boolean",
-			describe: `\
-[${chalk.greenBright("auto")}=${chalk.cyanBright("false")}] \
-do not format the type definition files
-			`,
-		})
-
 		.option("o", {
 			alias: "output",
 			requiresArg: true,
@@ -55,6 +43,26 @@ do not format the type definition files
 [${chalk.greenBright("auto")}=${chalk.cyanBright(
 				"source/index.d.ts"
 			)}] relative path for index.d.ts type definition output\n`,
+		})
+
+		.option("n", {
+			alias: ["noFormat"],
+			requiresArg: false,
+			demandOption: false,
+			type: "boolean",
+			describe: `\
+[${chalk.greenBright("auto")}=${chalk.cyanBright("false")}] \
+do not format the type definition files\n\n`,
+		})
+
+		.option("d", {
+			alias: ["debug"],
+			requiresArg: false,
+			demandOption: false,
+			type: "boolean",
+			describe: `\
+[${chalk.greenBright("auto")}=${chalk.cyanBright("false")}] \
+enables debugging - generates .tongoose/ directory with separate type definition, raw & clean json files for each schema\n`,
 		})
 
 		.option("v", { alias: "version" })
