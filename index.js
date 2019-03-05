@@ -17,7 +17,7 @@ const prettier = require("prettier");
 
 require("./utils/manageCliWithYargs")(); // `yargs` will still contain everything (.argv, etc.)
 
-// console.log("yargs.argv", yargs.argv); // #CLEANUP
+const enableDebugging = yargs.argv["debug"] ? true : false;
 const disableFormatting = yargs.argv["noFormat"] ? true : false;
 
 const repository = "https://github.com/tongoose/tongoose";
@@ -28,17 +28,13 @@ const signature = `\
  * Check out the project at
  * ${repository}
  * 
+ * Information (ctrl+F):
+ * 
+ * #1 https://github.com/tongoose/tongoose#such-success--much-greatness--now-lets-try-to-apply--use-the-generated-type-interface
+ * 
  * Copyright (c) 2019 Kipras Melnikovas <kipras@kipras.org>
  * MIT Licensed
  */`;
-
-const prettierOptions = { parser: "typescript" };
-
-const formattingInfo = disableFormatting
-	? `/** @tongoose: generated with --noFormat flag */`
-	: `/** @tongoose: formatted using \`prettier\` with options ${JSON.stringify(
-			prettierOptions
-	  )} */`;
 
 // NOTE - when updating the required imports and adding a new variable,
 // make sure to also update the `convertCleanMongooseSchemaToTypeScriptReadyJSObject` function
@@ -46,6 +42,7 @@ const formattingInfo = disableFormatting
 // and Also edit the `doTheMagicMongooseSchemaIntoJSONObjectsAndTSTypeDefinitionFilesParsing` function
 // to properly turn that type into a string using `.replace(regex)`;
 const requiredImportsForTypeScriptInterfaces = `\
+import mongoose from "mongoose"; // npm i mongoose
 import { ObjectId, Decimal128 } from "bson"; // \`npm i --save-dev @types/mongodb\`\
 `;
 
@@ -210,6 +207,7 @@ ${chalk.white(`Schema definition not found in`)} \
 		// console.log(rawJSONStrObj, "\n");
 
 		// Write the *raw* JSON file
+		enableDebugging &&
 		fs.writeFileSync(
 			path.join(pathToRawJSONOutputDir, `${toFilename(modelFile)}.raw.json`),
 			rawJSONStrObj
@@ -236,6 +234,7 @@ ${chalk.white(`Schema definition not found in`)} \
 		);
 
 		// Write the *clean* JSON file
+		enableDebugging &&
 		fs.writeFileSync(
 			`${pathToCleanJSONOutputDir}/${toFilename(modelFile)}.clean.json`,
 			typeScriptTypeDefinitionsAsJSON
@@ -263,6 +262,7 @@ ${typeScriptTypeDefinitions}\n`;
 		// write type definitions if any exist
 		if (Object.keys(typeScriptTypeDefinitionsAsJSON).length > 0) {
 			// Write separately, thus also include `requiredImportsForTypeScriptInterfaces`
+			enableDebugging &&
 			fs.writeFileSync(
 				path.join(pathToTypeDefOutputDir, `${fileNameNoExt}.d.ts`),
 				`\
