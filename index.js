@@ -16,6 +16,7 @@ const chalk = require("chalk");
 const prettier = require("prettier");
 
 require("./utils/manageCliWithYargs")(); // `yargs` will still contain everything (.argv, etc.)
+// console.log("yargs.argv", yargs.argv); // #CLEANUP
 
 const enableDebugging = yargs.argv["debug"] ? true : false;
 const disableFormatting = yargs.argv["noFormat"] ? true : false;
