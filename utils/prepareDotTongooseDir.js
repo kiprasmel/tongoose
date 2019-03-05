@@ -2,9 +2,16 @@ const fs = require("fs");
 const path = require("path");
 const rimraf = require("rimraf");
 const toFilename = require("./toFilename");
+const yargs = require("yargs");
 
 function prepareDotTongooseDir(pathToDotTongooseDir, directoriesToCreateInsideDotTongooseDir) {
 	// clean up the .tongoose/ directory from last time so it's fresh
+
+	// debug not set or false
+	if (!yargs.argv["debug"]) {
+		return;
+	}
+
 	rimraf.sync(pathToDotTongooseDir);
 
 	// create required directories
@@ -14,13 +21,18 @@ function prepareDotTongooseDir(pathToDotTongooseDir, directoriesToCreateInsideDo
 
 	// Provide some basic but key information to avoid miss-understandings
 	fs.writeFileSync(
-		path.join(pathToDotTongooseDir, "README.md"),
+		path.join(pathToDotTongooseDir, "README"),
 		`\
-# ${toFilename(pathToDotTongooseDir)}
+${toFilename(pathToDotTongooseDir)}
 
-## WARNING
+🐛 Please submit issues / bugs / feedback to https://github.com/tongoose/tongoose/issues
 
-> Everything inside this directory will be wiped out after running the \`tongoose\` script, hence you shouldn't put anything here - it's for reading / debugging purposes only.
+WARNING:
+
+Everything inside this directory will be wiped out
+after running tongoose with \`--debug\` option (\`tongoose --debug\`),
+hence you shouldn't put anything here -
+it's for reading / debugging purposes only.
 `
 	);
 }
