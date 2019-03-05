@@ -3,15 +3,15 @@
 📘 Automatically generate TypeScript Interfaces from Mongoose Schemas!
 
 <p align="center">
-<a href="https://www.npmjs.com/package/tongoose">
+<a href="https://www.npmjs.com/package/tongoose" target="_blank" rel="noopener noreferrer">
 	<img src="https://img.shields.io/npm/v/tongoose.svg?style=flat-square" alt="" />
 </a>
 
-<a href="https://www.npmjs.com/package/tongoose">
+<a href="https://www.npmjs.com/package/tongoose" target="_blank" rel="noopener noreferrer">
 	<img src="https://img.shields.io/npm/dt/tongoose.svg?style=flat-square" alt="" />
 </a>
 
-<a href="https://github.com/tongoose/tongoose/blob/master/LICENSE">
+<a href="https://github.com/tongoose/tongoose/blob/master/LICENSE" target="_blank" rel="noopener noreferrer">
 	<img src="https://img.shields.io/npm/l/tongoose.svg?style=flat-square" alt="MIT"/>
 </a>
 </p>
@@ -38,7 +38,7 @@ tongoose ./path/to/mongoose/models
 
 That's it! Now just integrate the generated Interfaces with your Mongoose Schemas!
 
-Don't know how? Head over to the [From 0 to hero](https://github.com/tongoose/tongoose#from-0-to-hero) section - you'll get everything working in less than 5 minutes!
+Don't know how? Head over to the [From 0 to hero](https://github.com/tongoose/tongoose#from-0-to-hero) section - you'll set up a sample TypeScript + Babel project & will learn how to integrate TypeScript with mongoose Schemas!
 
 ---
 
@@ -116,10 +116,17 @@ Options:
   -s, --src, --source  [required] [selected by default] relative path to
                        mongoose models' directory
 
-  -n, --noFormat       [auto=false] do not format the type definition files
-
   -o, --output         [auto=source/index.d.ts] relative path for index.d.ts
                        type definition output
+
+  -n, --noFormat       [auto=false] do not format the type definition files
+
+  -d, --debug          [auto=false] enables debugging - generates .tongoose/
+                       directory with separate type definition, raw & clean
+                       json files for each schema
+
+  -v, --version        Show version number
+  -h, --help           Show help
 
 Examples:
   tongoose ./src/models
@@ -144,8 +151,11 @@ tongoose src/models/
 - open the generated `src/models/index.d.ts` file & take a look!
 
 ```ts
+import mongoose from "mongoose"
 import { ObjectId } from "bson"; // `npm i --save-dev @types/mongodb`
 
+// Notice the difference between `IUserModel` & `IUser`!
+export interface IUserModel extends IUser, mongoose.Document {}
 export interface IUser {
 	username?: string;
 	email: string;
@@ -161,8 +171,7 @@ export interface IUser {
 ```diff
 // src/models/User.ts
 import mongoose from "mongoose";
-+import { IUser } from './index.d';
-+interface IUserModel extends IUser, mongoose.Document {}
++import { IUserModel } from './index.d';
 
 const UserSchema = new mongoose.Schema({
 	username: String,
