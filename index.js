@@ -111,6 +111,25 @@ ${requiredImportsForTypeScriptInterfaces}
 		const fullFilePath = path.join("./", modelFile);
 		const modelFileContent = fs.readFileSync(fullFilePath, { encoding: "utf-8" });
 
+		// #TESTING
+		// const currentDir = process.env.PWD;
+
+		// console.log("fullFilePath", fullFilePath);
+
+		// const importedModelFile = require(path.resolve(currentDir, fullFilePath));
+
+		// if (importedModelFile.schema && importedModelFile.schema.tree) {
+		// 	importedModelFile.schema = importedModelFile.schema.tree;
+		// }
+
+		// console.log(
+		// 	"TCL: doTheMagicMongooseSchemaIntoJSONObjectsAndTSTypeDefinitionFilesParsing -> importedModelFile",
+		// 	// importedModelFile,
+		// 	// importedModelFile,
+		// 	"\n",
+		// 	importedModelFile.schema
+		// );
+
 		// matches schema from start to end #IWillRefactorThisLATER
 		// const schemaRegex = /(const|let|var).*?=.*?Schema\(.*(\r?\n.*?)*\}(\r?\n)*\)\;/g;
 		const schemaRegex = /(const|let|var).*?=.*?Schema\([^]*?\}[\r\n\s]*\)\;/g;
@@ -214,10 +233,10 @@ ${requiredImportsForTypeScriptInterfaces}
 
 		// Write the *raw* JSON file
 		enableDebugging &&
-		fs.writeFileSync(
-			path.join(pathToRawJSONOutputDir, `${toFilename(modelFile)}.raw.json`),
-			rawJSONStrObj
-		);
+			fs.writeFileSync(
+				path.join(pathToRawJSONOutputDir, `${toFilename(modelFile)}.raw.json`),
+				rawJSONStrObj
+			);
 
 		// #LOGGING #CLEANUP
 		// Object.entries(parsedSchemaAsJSObject).forEach(([key, value], index) => {
@@ -241,10 +260,10 @@ ${requiredImportsForTypeScriptInterfaces}
 
 		// Write the *clean* JSON file
 		enableDebugging &&
-		fs.writeFileSync(
-			`${pathToCleanJSONOutputDir}/${toFilename(modelFile)}.clean.json`,
-			typeScriptTypeDefinitionsAsJSON
-		);
+			fs.writeFileSync(
+				`${pathToCleanJSONOutputDir}/${toFilename(modelFile)}.clean.json`,
+				typeScriptTypeDefinitionsAsJSON
+			);
 
 		const typeScriptTypeDefinitions = typeScriptTypeDefinitionsAsJSON
 			.replace(/"([^]*?)"/g, "$1")
@@ -272,13 +291,13 @@ export interface ${interfaceName} ${typeScriptTypeDefinitions}\n`;
 		if (Object.keys(typeScriptTypeDefinitionsAsJSON).length > 0) {
 			// Write separately, thus also include `requiredImportsForTypeScriptInterfaces`
 			enableDebugging &&
-			fs.writeFileSync(
-				path.join(pathToTypeDefOutputDir, `${fileNameNoExt}.d.ts`),
-				`\
+				fs.writeFileSync(
+					path.join(pathToTypeDefOutputDir, `${fileNameNoExt}.d.ts`),
+					`\
 ${formattingInfo}\n
 ${requiredImportsForTypeScriptInterfaces}\n
 ${formattedTypeScriptInterface}`
-			);
+				);
 
 			// Write into single `relPathToIndexDDDTsFile` ("index.d.ts") file
 			// Thus do NOT add `requiredImportsForTypeScriptInterfaces` here

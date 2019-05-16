@@ -26,7 +26,9 @@
 		"rimraf": "^2.6.3",
 		"yargs": "^13.2.0"
 	},
-	"devDependencies": {},
+	"devDependencies": {
+		"mongoose": "^5.4.17"
+	},
 	"keywords": [
 		"mongoose",
 		"typescript",
