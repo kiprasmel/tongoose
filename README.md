@@ -1,6 +1,6 @@
 # Tongoose
 
-📘 Automatically generate TypeScript Interfaces from Mongoose Schemas!
+📘 Auto-generate TypeScript interfaces from Mongoose schemas!
 
 <p align="center">
 <a href="https://www.npmjs.com/package/tongoose" target="_blank" rel="noopener noreferrer">
