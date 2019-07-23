@@ -13,7 +13,8 @@
 const chalk = require("chalk");
 const yargs = require("yargs");
 
-function manageCliWithYargs() {
+module.exports = function manageCliWithYargs() {
+	// eslint-disable-next-line no-unused-expressions
 	yargs
 		.scriptName("")
 		.usage(
@@ -72,6 +73,4 @@ enables debugging - generates .tongoose/ directory with separate type definition
 		.example("tongoose --help")
 		.updateStrings({})
 		.help().argv;
-}
-
-module.exports = manageCliWithYargs;
+};

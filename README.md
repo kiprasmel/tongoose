@@ -1,6 +1,6 @@
 # Tongoose
 
-📘 Automatically generate TypeScript Interfaces from Mongoose Schemas!
+📘 Auto-generate TypeScript interfaces from Mongoose schemas!
 
 <p align="center">
 <a href="https://www.npmjs.com/package/tongoose" target="_blank" rel="noopener noreferrer">
@@ -16,27 +16,29 @@
 </a>
 </p>
 
-## Installation & usage
+## Usage
 
-- Install using npm
+- Remotely
 
-```bash
-npm i -g tongoose
+```sh
+npx tongoose ./path/to/mongoose/model[s]
 ```
 
-- Take a look at the `--help` message
+- Locally (<span title="More time efficient if ran more than once!">recommended</span>)
 
-```bash
-tongoose
+```sh
+npm install --global tongoose
+# or
+yarn global add tongoose
 ```
 
-- Generate TypeScript Interfaces from your Schemas
+and run
 
-```bash
+```sh
 tongoose ./path/to/mongoose/models
 ```
 
-That's it! Now just integrate the generated Interfaces with your Mongoose Schemas!
+That's it! Now just integrate the generated interfaces with your Mongoose Schemas!
 
 Don't know how? Head over to the [From 0 to hero](https://github.com/tongoose/tongoose#from-0-to-hero) section - you'll set up a sample TypeScript + Babel project & will learn how to integrate TypeScript with mongoose Schemas!
 
@@ -60,6 +62,8 @@ Don't know how? Head over to the [From 0 to hero](https://github.com/tongoose/to
 ## From 0 to hero (you'll love it)
 
 > Note - the code is available at [/tongoose/TypeScript-Babel-Starter](https://github.com/tongoose/TypeScript-Babel-Starter)
+
+> **Warning** - this is currently out-of-date. We'll update this tutorial shortly.
 
 ### Set up a simple TypeScript + Babel project
 

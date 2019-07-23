@@ -7,13 +7,13 @@
  * MIT Licensed
  */
 
-const showHelpAndExit = require("./showHelpAndExit");
 const chalk = require("chalk");
+const showHelpAndExit = require("./showHelpAndExit");
 
 function makeSureAtLeastOneFileExistsOrExit(relFilePathArrayLength, relPathToModelsDirOrFile) {
 	if (relFilePathArrayLength <= 0) {
 		showHelpAndExit(`\
-${chalk.redBright(`Error!`)}
+${chalk.redBright("Error!")}
 ${chalk.yellowBright(
 	`\
 * 0 model files found!

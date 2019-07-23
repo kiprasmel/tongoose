@@ -8,11 +8,9 @@
  */
 
 const path = require("path");
+const makeSureAtLeastOneFileExistsOrExit = require("./makeSureAtLeastOneFileExistsOrExit");
 
-function generateRelativePathForTypeDefinitionOutputFile(
-	relPathToModelsDirOrFile = "./",
-	fileArray
-) {
+function generateRelativePathForTypeDefinitionOutputFile(relPathToModelsDirOrFile = "./", fileArray) {
 	// relPathToModelsDirOrFile is a directory. output will go to `relPathToModelsDirOrFile/index.d.ts`
 	if (fileArray.length > 1) {
 		return path.join(relPathToModelsDirOrFile, "index.d.ts");
@@ -22,9 +20,11 @@ function generateRelativePathForTypeDefinitionOutputFile(
 	// we'll replace `path/to/file/theFile.ts` with `path/to/file/index.d.ts`
 	// so that we can create the type definition (index.d.ts) file inside `path/to/file/` directory
 	// (because `path/to/file/theFile.ts` is NOT a directory)
-	else if (fileArray.length === 1) {
-		return path.join(relPathToModelsDirOrFile.replace(/(.*[\/\\]).*/g, "$1"), "index.d.ts");
-	} else makeSureAtLeastOneFileExistsOrExit(fileArray);
+	if (fileArray.length === 1) {
+		return path.join(relPathToModelsDirOrFile.replace(/(.*[/\\]).*/g, "$1"), "index.d.ts");
+	}
+
+	makeSureAtLeastOneFileExistsOrExit(fileArray);
 }
 
 module.exports = generateRelativePathForTypeDefinitionOutputFile;

@@ -1,21 +1,21 @@
 const fs = require("fs");
 const path = require("path");
 const rimraf = require("rimraf");
-const toFilename = require("./toFilename");
 const yargs = require("yargs");
+const toFilename = require("./toFilename");
 
 function prepareDotTongooseDir(pathToDotTongooseDir, directoriesToCreateInsideDotTongooseDir) {
 	// clean up the .tongoose/ directory from last time so it's fresh
 
 	// debug not set or false
-	if (!yargs.argv["debug"]) {
+	if (!yargs.argv.debug) {
 		return;
 	}
 
 	rimraf.sync(pathToDotTongooseDir);
 
 	// create required directories
-	for (let dir of directoriesToCreateInsideDotTongooseDir) {
+	for (const dir of directoriesToCreateInsideDotTongooseDir) {
 		fs.mkdirSync(dir);
 	}
 

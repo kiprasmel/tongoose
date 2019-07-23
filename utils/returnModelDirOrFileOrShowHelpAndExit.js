@@ -20,7 +20,7 @@ function returnModelDirOrFileOrShowHelpAndExit(argvObj = yargs.argv) {
 		return argvObj.source;
 	}
 
-	for (const possibleRelativeDirPath of argvObj["_"]) {
+	for (const possibleRelativeDirPath of argvObj._) {
 		if (fs.existsSync(possibleRelativeDirPath)) {
 			return possibleRelativeDirPath;
 		}
