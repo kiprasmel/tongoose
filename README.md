@@ -61,6 +61,8 @@ Don't know how? Head over to the [From 0 to hero](https://github.com/tongoose/to
 
 > Note - the code is available at [/tongoose/TypeScript-Babel-Starter](https://github.com/tongoose/TypeScript-Babel-Starter)
 
+> **Warning** - this is currently out-of-date. We'll update this tutorial shortly.
+
 ### Set up a simple TypeScript + Babel project
 
 ```bash
