@@ -14,13 +14,27 @@
  * MIT Licensed
  */
 
+/**
+ * cloning an object with any data loss in unacceptable,
+ * because it breaks things.
+ *
+ * see https://stackoverflow.com/a/122704
+ *
+ * if we don't clone properly, things get stuck
+ * and we get a stack overflow
+ * (for example, https://i.imgur.com/qLuamCh.jpg)
+ */
+const cloneDeep = require("lodash.clonedeep");
+
 // the `objValue.required === "true"` check is neccessary because we're
 // parsing strings, so yeah #IWillRefactorThisLATER
 function isRequired(objValue) {
 	return !!(objValue.required && (objValue.required === true || objValue.required === "true"));
 }
 
-function magicallyConvertMongooseSchemaToTypeScriptReadyJSObjectRecursively(startingObject, constModelFileNameArray) {
+function magicallyConvertMongooseSchemaToTypeScriptReadyJSObjectRecursively(startingObj, constModelFileNameArray) {
+	let startingObject = cloneDeep(startingObj);
+
 	// NOTE! if `variable === null`, `typeof variable` => "object"
 	// This is a bug in ECMAScript, and thus we handle it this way
 	// Read more @ https://www.ecma-international.org/ecma-262/5.1/#sec-11.4.3
@@ -133,6 +147,7 @@ function magicallyConvertMongooseSchemaToTypeScriptReadyJSObjectRecursively(star
 		}
 
 		// array:
+		// // else if (typeof value === "array") {
 		else if (Array.isArray(value)) {
 			if (value[0].type) {
 				// console.log("array; value[0].type");
