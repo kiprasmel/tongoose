@@ -8,7 +8,6 @@
  * MIT Licensed
  */
 
-"use strict";
 const fs = require("fs");
 const path = require("path");
 const yargs = require("yargs");
@@ -18,16 +17,14 @@ const prettier = require("prettier");
 require("./utils/manageCliWithYargs")(); // `yargs` will still contain everything (.argv, etc.)
 // console.log("yargs.argv", yargs.argv); // #CLEANUP
 
-const enableDebugging = yargs.argv["debug"] ? true : false;
-const disableFormatting = yargs.argv["noFormat"] ? true : false;
+const enableDebugging = !!yargs.argv.debug;
+const disableFormatting = !!yargs.argv.noFormat;
 
 const prettierOptions = { parser: "typescript" };
 
 const formattingInfo = disableFormatting
-	? `/** @tongoose: generated with --noFormat flag */`
-	: `/** @tongoose: formatted using \`prettier\` with options ${JSON.stringify(
-			prettierOptions
-	  )} */`;
+	? "/** @tongoose: generated with --noFormat flag */"
+	: `/** @tongoose: formatted using \`prettier\` with options ${JSON.stringify(prettierOptions)} */`;
 
 const repository = "https://github.com/tongoose/tongoose";
 const signature = `\
@@ -78,12 +75,9 @@ const directoriesToCreateInsideDotTongooseDir = [
 	pathToTypeDefOutputDir,
 ];
 
-require("./utils/prepareDotTongooseDir")(
-	pathToDotTongooseDir,
-	directoriesToCreateInsideDotTongooseDir
-);
+require("./utils/prepareDotTongooseDir")(pathToDotTongooseDir, directoriesToCreateInsideDotTongooseDir);
 
-let relFilePathArray = [...collectAllModelFilesRecursivelySync(relPathToModelsDirOrFile)];
+const relFilePathArray = [...collectAllModelFilesRecursivelySync(relPathToModelsDirOrFile)];
 const modelFileNameArray = relFilePathArray.map((filePath) => toFilename(filePath, false));
 
 makeSureAtLeastOneFileExistsOrExit(relFilePathArray.length, relPathToModelsDirOrFile);
@@ -95,7 +89,7 @@ const relPathToIndexDDDTsFile = generateRelativePathForTypeDefinitionOutputFile(
 
 // don't forget your ';' before here! #DEBUG
 (function doTheMagicMongooseSchemaIntoJSONObjectsAndTSTypeDefinitionFilesParsing() {
-	let indexDDDTsFileStream = fs.createWriteStream(relPathToIndexDDDTsFile, {
+	const indexDDDTsFileStream = fs.createWriteStream(relPathToIndexDDDTsFile, {
 		flags: "w",
 	});
 
@@ -113,15 +107,15 @@ ${requiredImportsForTypeScriptInterfaces}
 
 		// matches schema from start to end #IWillRefactorThisLATER
 		// const schemaRegex = /(const|let|var).*?=.*?Schema\(.*(\r?\n.*?)*\}(\r?\n)*\)\;/g;
-		const schemaRegex = /(const|let|var).*?=.*?Schema\([^]*?\}[\r\n\s]*\)\;/g;
+		const schemaRegex = /(const|let|var).*?=.*?Schema\([^]*?\}[\r\n\s]*\);/g;
 
 		let rawSchemaContent = schemaRegex.exec(modelFileContent);
 
-		if ((rawSchemaContent && rawSchemaContent.length > 0) || typeof rawSchemaContent === "array") {
+		if ((rawSchemaContent && rawSchemaContent.length > 0) || Array.isArray(rawSchemaContent)) {
 			rawSchemaContent = rawSchemaContent[0];
 		} else {
 			// schema definition not found
-			showWarning("Schema definition not found in " + chalk.cyanBright(modelFile));
+			showWarning(`Schema definition not found in ${chalk.cyanBright(modelFile)}`);
 			continue;
 		}
 
@@ -131,10 +125,10 @@ ${requiredImportsForTypeScriptInterfaces}
 		// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp#assertions
 
 		// clean up & prepare schema content for parsing / importing #IWillRefactorThisLATER
-		let schemaContentPreparedForImportingAndJSON = rawSchemaContent
+		const schemaContentPreparedForImportingAndJSON = rawSchemaContent
 			// .replace(/\/\/.*$/, "") // doesn't work
 			.replace(/(const|let|var).*?=.*?Schema.*\(/, "module.exports = ") // first line of schema def
-			.replace(/\<[^]*?\>/g, "") // typescript defs like <InterfaceName>
+			.replace(/<[^]*?>/g, "") // typescript defs like <InterfaceName>
 			// .replace(/},\r?\n?\s*{.*(\r?\n?.*?)*}\r?\n?\s*\)/, "}") // schema options
 
 			// .replace(/(?<=}[\w\W]*?,){[\w\W]*?}[\w\W]*?\)/g, "}")
@@ -192,7 +186,7 @@ ${requiredImportsForTypeScriptInterfaces}
 			.replace(/(?<=:*?)""/g, '"string"') // `foo: ""` => `foo: "string"`
 
 			// "String" | "[String]" | [String] | String => "string" | "[string]"
-			.replace(/(?:(?:")?(\[)?(?:String)(\])?(?:")?)(?!\:)/g, '"$1string$2"')
+			.replace(/(?:(?:")?(\[)?(?:String)(\])?(?:")?)(?!:)/g, '"$1string$2"')
 
 			// any other not yet quoted type into quoted `type` or quoted `[type]`
 			.replace(/(?<=:(?:[\s\n\r])*?)(\[)?([A-Za-z]+)(\])?/g, '"$1$2$3"');
@@ -202,10 +196,11 @@ ${requiredImportsForTypeScriptInterfaces}
 		// (?<=:(?:[\s\n\r])*?)\[?[A-Za-z]+\]?
 
 		// import the JS object. Got ERRORS here? The parsed is broken (rawSchemaContent.replace()....)
+		// eslint-disable-next-line no-eval
 		const parsedSchemaAsJSObject = eval(schemaContentPreparedForImportingAndJSON); // Got ERRORS here? The parsed is broken (rawSchemaContent.replace()....)
 
 		// turn into json string (great) (optional)
-		let rawJSONStrObj = JSON.stringify(parsedSchemaAsJSObject);
+		const rawJSONStrObj = JSON.stringify(parsedSchemaAsJSObject);
 
 		// #LOGGING #CLEANUP
 		// console.log("\n");
@@ -213,11 +208,9 @@ ${requiredImportsForTypeScriptInterfaces}
 		// console.log(rawJSONStrObj, "\n");
 
 		// Write the *raw* JSON file
-		enableDebugging &&
-		fs.writeFileSync(
-			path.join(pathToRawJSONOutputDir, `${toFilename(modelFile)}.raw.json`),
-			rawJSONStrObj
-		);
+		if (enableDebugging) {
+			fs.writeFileSync(path.join(pathToRawJSONOutputDir, `${toFilename(modelFile)}.raw.json`), rawJSONStrObj);
+		}
 
 		// #LOGGING #CLEANUP
 		// Object.entries(parsedSchemaAsJSObject).forEach(([key, value], index) => {
@@ -233,18 +226,16 @@ ${requiredImportsForTypeScriptInterfaces}
 		 *
 		 */
 		const typeScriptTypeDefinitionsAsJSON = JSON.stringify(
-			convertCleanMongooseSchemaToTypeScriptReadyJSObject(
-				parsedSchemaAsJSObject,
-				modelFileNameArray
-			)
+			convertCleanMongooseSchemaToTypeScriptReadyJSObject(parsedSchemaAsJSObject, modelFileNameArray)
 		);
 
 		// Write the *clean* JSON file
-		enableDebugging &&
-		fs.writeFileSync(
-			`${pathToCleanJSONOutputDir}/${toFilename(modelFile)}.clean.json`,
-			typeScriptTypeDefinitionsAsJSON
-		);
+		if (enableDebugging) {
+			fs.writeFileSync(
+				`${pathToCleanJSONOutputDir}/${toFilename(modelFile)}.clean.json`,
+				typeScriptTypeDefinitionsAsJSON
+			);
+		}
 
 		const typeScriptTypeDefinitions = typeScriptTypeDefinitionsAsJSON
 			.replace(/"([^]*?)"/g, "$1")
@@ -256,9 +247,9 @@ ${requiredImportsForTypeScriptInterfaces}
 		// /\[(?:.|[\r\n])*?\{(.*?)\}(?:.|[\r\n])*?\]/g;
 		// /\[(?:.|[\r\n])*?\{([^\}\]]*?)/g;
 
-		const fileNameNoExt = toFilename(modelFile, false); //modelFile.replace(/.*[\/\\](.*)\..*/g, "$1");
+		const fileNameNoExt = toFilename(modelFile, false); // modelFile.replace(/.*[\/\\](.*)\..*/g, "$1");
 
-		const interfaceName = "I" + fileNameNoExt;
+		const interfaceName = `I${fileNameNoExt}`;
 
 		const typeScriptInterface = `\
 export interface ${interfaceName}Model extends ${interfaceName}, mongoose.Document {} // #1
@@ -271,18 +262,19 @@ export interface ${interfaceName} ${typeScriptTypeDefinitions}\n`;
 		// write type definitions if any exist
 		if (Object.keys(typeScriptTypeDefinitionsAsJSON).length > 0) {
 			// Write separately, thus also include `requiredImportsForTypeScriptInterfaces`
-			enableDebugging &&
-			fs.writeFileSync(
-				path.join(pathToTypeDefOutputDir, `${fileNameNoExt}.d.ts`),
-				`\
+			if (enableDebugging) {
+				fs.writeFileSync(
+					path.join(pathToTypeDefOutputDir, `${fileNameNoExt}.d.ts`),
+					`\
 ${formattingInfo}\n
 ${requiredImportsForTypeScriptInterfaces}\n
 ${formattedTypeScriptInterface}`
-			);
+				);
+			}
 
 			// Write into single `relPathToIndexDDDTsFile` ("index.d.ts") file
 			// Thus do NOT add `requiredImportsForTypeScriptInterfaces` here
-			indexDDDTsFileStream.write("\n" + formattedTypeScriptInterface);
+			indexDDDTsFileStream.write(`\n${formattedTypeScriptInterface}`);
 		}
 	} /** for (const modelFile of relFilePathArray) */
 
@@ -305,10 +297,10 @@ ${formattedTypeScriptInterface}`
 		`
 ⚡️ ${chalk.cyanBright("Tongoose")} finished \
 
-📂 Created \`${chalk.green(`${pathToDotTongooseDir.replace(/.*[\/\\]/g, "")}`)}\` \
+📂 Created \`${chalk.green(`${pathToDotTongooseDir.replace(/.*[/\\]/g, "")}`)}\` \
 directory for manual debugging (you can safely delete it) \
 
-📘 Main \`${chalk.greenBright(relPathToIndexDDDTsFile.replace(/.*[\/\\]/g, ""))}\` \
+📘 Main \`${chalk.greenBright(relPathToIndexDDDTsFile.replace(/.*[/\\]/g, ""))}\` \
 file placed in 👉  \
 \`${chalk.greenBright(toClickablePath(relPathToIndexDDDTsFile))}\` \
 (${chalk.green("click it!")})
