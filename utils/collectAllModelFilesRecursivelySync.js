@@ -27,10 +27,7 @@ function collectAllModelFilesRecursivelySync(dir, acceptableFiles = /(?<!\.d)\.[
 
 		// else, if it's a directory - continue searching
 		else if (fs.lstatSync(newFileOrFolder).isDirectory()) {
-			currentFileArray = [
-				...currentFileArray,
-				...collectAllModelFilesRecursivelySync(newFileOrFolder),
-			];
+			currentFileArray = [...currentFileArray, ...collectAllModelFilesRecursivelySync(newFileOrFolder)];
 		}
 
 		// acceptableFiles.test(currFileOrFolder)

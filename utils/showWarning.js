@@ -10,7 +10,7 @@
 const chalk = require("chalk");
 
 function showWarning(msg) {
-	console.log(`${chalk.yellowBright(`Warning`)}: ${msg}`);
+	console.log(`${chalk.yellowBright("Warning")}: ${msg}`);
 }
 
 module.exports = showWarning;

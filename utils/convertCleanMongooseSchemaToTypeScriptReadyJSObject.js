@@ -14,20 +14,27 @@
  * MIT Licensed
  */
 
-const chalk = require("chalk");
+/**
+ * cloning an object with any data loss in unacceptable,
+ * because it breaks things.
+ *
+ * see https://stackoverflow.com/a/122704
+ *
+ * if we don't clone properly, things get stuck
+ * and we get a stack overflow
+ * (for example, https://i.imgur.com/qLuamCh.jpg)
+ */
+const cloneDeep = require("lodash.clonedeep");
 
 // the `objValue.required === "true"` check is neccessary because we're
 // parsing strings, so yeah #IWillRefactorThisLATER
 function isRequired(objValue) {
-	return objValue.required && (objValue.required === true || objValue.required === "true")
-		? true
-		: false;
+	return !!(objValue.required && (objValue.required === true || objValue.required === "true"));
 }
 
-function magicallyConvertMongooseSchemaToTypeScriptReadyJSObjectRecursively(
-	startingObject,
-	constModelFileNameArray
-) {
+function magicallyConvertMongooseSchemaToTypeScriptReadyJSObjectRecursively(startingObj, constModelFileNameArray) {
+	let startingObject = cloneDeep(startingObj);
+
 	// NOTE! if `variable === null`, `typeof variable` => "object"
 	// This is a bug in ECMAScript, and thus we handle it this way
 	// Read more @ https://www.ecma-international.org/ecma-262/5.1/#sec-11.4.3
@@ -44,43 +51,38 @@ function magicallyConvertMongooseSchemaToTypeScriptReadyJSObjectRecursively(
 		if (startingObject === undefined || typeof startingObject === "undefined") {
 			return "undefined";
 		} //
-		else if (startingObject === null) {
+		if (startingObject === null) {
 			return "null";
 		} //
-		else if (typeof startingObject === "string") {
+		if (typeof startingObject === "string") {
 			if (startingObject === "Array") {
-				return `Array<any>`;
+				return "Array<any>";
 			}
 			// the goal is to delete this `else if` statement. We're getting there :D
-			else if (
-				startingObject === "Buffer" ||
-				startingObject === "Mixed" ||
-				startingObject === "Map"
-			) {
-				return `any`;
-			} else {
-				// NOTE! The ORDER of the operations done here IS VERY IMPORTANT!
-				let typeIsArray = false;
-
-				if (startingObject[0] == "[" && startingObject[startingObject.length - 1] == "]") {
-					typeIsArray = true;
-					startingObject = startingObject.substring(1, startingObject.length - 1); // [foo] => foo
-				}
-
-				// if is an interface (refers to one of collected mongoose model files)
-				if (constModelFileNameArray.includes(startingObject)) {
-					startingObject = "I" + startingObject; // Foo => IFoo
-				}
-
-				return typeIsArray ? `Array<${startingObject}>` : startingObject;
+			if (startingObject === "Buffer" || startingObject === "Mixed" || startingObject === "Map") {
+				return "any";
 			}
+			// NOTE! The ORDER of the operations done here IS VERY IMPORTANT!
+			let typeIsArray = false;
+
+			if (startingObject[0] === "[" && startingObject[startingObject.length - 1] === "]") {
+				typeIsArray = true;
+				startingObject = startingObject.substring(1, startingObject.length - 1); // [foo] => foo
+			}
+
+			// if is an interface (refers to one of collected mongoose model files)
+			if (constModelFileNameArray.includes(startingObject)) {
+				startingObject = `I${startingObject}`; // Foo => IFoo
+			}
+
+			return typeIsArray ? `Array<${startingObject}>` : startingObject;
 		} //
-		else if (typeof startingObject !== "string") {
+		if (typeof startingObject !== "string") {
 			return JSON.stringify(startingObject);
 		}
 	}
 
-	let collectedTypes = {};
+	const collectedTypes = {};
 	let isArray = false;
 
 	if (Array.isArray(startingObject)) {
@@ -110,7 +112,7 @@ function magicallyConvertMongooseSchemaToTypeScriptReadyJSObjectRecursively(
 		 */
 	}
 
-	Object.entries(startingObject).forEach(([key, value], index) => {
+	Object.entries(startingObject).forEach(([key, value]) => {
 		// console.log("\n");
 		// console.log(index, key, "<- key");
 		// console.log(JSON.stringify(value));
@@ -137,9 +139,7 @@ function magicallyConvertMongooseSchemaToTypeScriptReadyJSObjectRecursively(
 			// if value.type isn't present, there's no way to add a `required` prop, hence don't even check for it (it's always optional)
 			else if (value) {
 				// console.log("obj; value");
-				collectedTypes[
-					key + "?"
-				] = magicallyConvertMongooseSchemaToTypeScriptReadyJSObjectRecursively(
+				collectedTypes[`${key}?`] = magicallyConvertMongooseSchemaToTypeScriptReadyJSObjectRecursively(
 					value,
 					constModelFileNameArray
 				);
@@ -147,7 +147,7 @@ function magicallyConvertMongooseSchemaToTypeScriptReadyJSObjectRecursively(
 		}
 
 		// array:
-		else if (typeof value === "array") {
+		else if (Array.isArray(value)) {
 			if (value[0].type) {
 				// console.log("array; value[0].type");
 				collectedTypes[
@@ -161,9 +161,7 @@ function magicallyConvertMongooseSchemaToTypeScriptReadyJSObjectRecursively(
 			// if value[0].type isn't present, there's no way to add a `required` prop, hence don't even check for it (it's always optional)
 			else if (value[0]) {
 				// console.log("array; value[0]");
-				collectedTypes[
-					key + "?"
-				] = magicallyConvertMongooseSchemaToTypeScriptReadyJSObjectRecursively(
+				collectedTypes[`${key}?`] = magicallyConvertMongooseSchemaToTypeScriptReadyJSObjectRecursively(
 					value[0],
 					constModelFileNameArray
 				);
@@ -174,9 +172,7 @@ function magicallyConvertMongooseSchemaToTypeScriptReadyJSObjectRecursively(
 		else {
 			// will do all value checks (as defined in the start of this function)
 			// and will return the proper result
-			collectedTypes[
-				key + "?"
-			] = magicallyConvertMongooseSchemaToTypeScriptReadyJSObjectRecursively(
+			collectedTypes[`${key}?`] = magicallyConvertMongooseSchemaToTypeScriptReadyJSObjectRecursively(
 				value,
 				constModelFileNameArray
 			);

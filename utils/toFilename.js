@@ -11,8 +11,8 @@
 
 function toFilename(pathToFileNameWithFilename = "", withExtension = true) {
 	return withExtension
-		? pathToFileNameWithFilename.replace(/.*[\/\\]/g, "")
-		: pathToFileNameWithFilename.replace(/.*[\/\\](\w+)(\.\w+)?/g, "$1");
+		? pathToFileNameWithFilename.replace(/.*[/\\]/g, "")
+		: pathToFileNameWithFilename.replace(/.*[/\\](\w+)(\.\w+)?/g, "$1");
 }
 
 module.exports = toFilename;

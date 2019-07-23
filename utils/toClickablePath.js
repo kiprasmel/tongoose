@@ -9,7 +9,7 @@
 
 // foo/bar\index.js => foo\\bar\\index.js (clickable both in integrated & true prompt)
 function toClickablePath(path) {
-	return path.replace(/[\/\\]/g, "\\\\");
+	return path.replace(/[/\\]/g, "\\\\");
 }
 
 module.exports = toClickablePath;

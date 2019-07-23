@@ -11,7 +11,9 @@ const yargs = require("yargs");
 
 function showHelpAndExit(errorMsg) {
 	yargs.showHelp();
-	errorMsg && console.log("\n" + errorMsg);
+	if (errorMsg) {
+		console.log(`\n${errorMsg}`);
+	}
 	process.exit(1);
 }
 

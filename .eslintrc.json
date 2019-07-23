@@ -1,0 +1,55 @@
+/**
+ * https://eslint.org/docs/rules/ #eslintRules
+ *
+ * https://prettier.io/docs/en/options.html #prettierRules
+ *
+ * https://github.com/wesbos/eslint-config-wesbos
+ *
+ * Note that prettier rules overwrite anything in wesbos's config
+ * (trailing comma, and single quote), so you'll need to include those as well.
+ */
+
+{
+	"root": true,
+	"extends": ["wesbos"],
+
+	/** eslint rules #eslintRules: */
+	"rules": {
+		"quotes": ["error", "double", { "avoidEscape": true }],
+
+		"no-console": "off",
+		"no-continue": "off",
+
+		"prefer-destructuring": [
+			"error",
+			{
+				"VariableDeclarator": {
+					"array": true,
+					"object": true
+				},
+				"AssignmentExpression": {
+					"array": false /** `false` allows `foo = bar[0]` */,
+					"object": true
+				}
+			}
+		],
+
+		/** prettier rules #prettierRules: */
+		"prettier/prettier": [
+			"error",
+			{
+				"singleQuote": false,
+				"useTabs": true,
+				"tabWidth": 4,
+				"printWidth": 120,
+				"trailingComma": "es5",
+				"arrowParens": "always",
+				"breakBeforeElse": true,
+				"flattenTernaries": true,
+				"proseWrap": "never",
+				"htmlWhitespaceSensitivity": "ignore",
+				"disableLanguages": []
+			}
+		]
+	}
+}
