@@ -21,7 +21,7 @@
 - Remotely
 
 ```sh
-npx tongoose ./path/to/mongoose/model[s]
+npx tongoose ./path/to/mongoose/model(s/)
 ```
 
 - Locally (<span title="More time efficient if ran more than once!">recommended</span>)
@@ -35,7 +35,7 @@ yarn global add tongoose
 and run
 
 ```sh
-tongoose ./path/to/mongoose/models
+tongoose ./path/to/mongoose/model(s/)
 ```
 
 That's it! Now just integrate the generated interfaces with your Mongoose Schemas!
