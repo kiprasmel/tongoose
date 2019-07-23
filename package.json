@@ -42,14 +42,13 @@
 		"eslint-plugin-react-hooks": "^1.3.0"
 	},
 	"keywords": [
-		"mongoose",
+		"tongoose",
+		"generate",
 		"typescript",
+		"interface",
 		"type",
-		"generator",
-		"generation",
 		"from",
-		"schema",
-		"schemas",
-		"tongoose"
+		"mongoose",
+		"schema"
 	]
 }
