@@ -147,7 +147,6 @@ function magicallyConvertMongooseSchemaToTypeScriptReadyJSObjectRecursively(star
 		}
 
 		// array:
-		// // else if (typeof value === "array") {
 		else if (Array.isArray(value)) {
 			if (value[0].type) {
 				// console.log("array; value[0].type");
