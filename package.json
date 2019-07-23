@@ -1,7 +1,7 @@
 {
 	"name": "tongoose",
-	"version": "0.5.1",
-	"description": "Generate TypeScript Type Definitions from Mongoose Schemas!",
+	"version": "0.6.0",
+	"description": "Auto-generate TypeScript interfaces from Mongoose schemas!",
 	"main": "index.js",
 	"author": "Kipras Melnikovas <kipras@kipras.org> (https://kipras.org)",
 	"license": "MIT",
